@@ -1,0 +1,124 @@
+create database movies;
+use movies;
+create table artist(Art_Id int primary key,Art_Name varchar(255),Art_Gender varchar(255));
+select * from artist;
+insert into artist values(01,'prithwi','male');
+insert into artist values(02,'fahad','male');
+insert into artist values(03,'sreedevi','female');
+insert into artist values(04,'kalpana','female');
+create table producer(Producer_Id int primary key,Producer_Name varchar(255),Producer_Phone varchar(255));
+select * from producer;
+alter table producer modify Producer_Phone varchar(255);
+insert into producer values(11,'Ranjith',9087986734);
+insert into producer values(12,'Anjaly',9087656471);
+insert into producer values(13,'Priyadarshan',8978967876);
+insert into producer values(14,'Fasil',7896870967);
+create table films(Film_Id int primary key,Film_Title varchar(255),Film_Year int,Film_Lang varchar(255),Prod_Id int);
+select * from films;
+insert into films values(21,'Indian Rupee',2011,'malayalam',11);
+insert into films values(22,'Wonder Women',2022,'malayalam',22);
+insert into films values(23,'marakkar',2021,'malayalam',21);
+insert into films values(24,'manichithra thazh',1993,'malayalam',93);
+alter table films rename column Prod_Id to Producer_Id;
+create table casting(Art_Id int primary key,Film_Id int, Part varchar(255));
+select * from casting;
+insert into casting values(31,1100,'Actor');
+insert into casting values(32,1111,'Actress');
+insert into casting values(33,1122,'Actress');
+insert into casting values(34,1133,'Actor');
+create table review(Film_Id int,Stars int);
+select * from review;
+insert into review values(41,5);
+insert into review values(42,6);
+insert into review values(43,7);
+insert into review values(44,8);
+
+//want to change the values of column Film_Id from table casting//
+
+update casting set Film_Id=21 where Film_Id=1100;
+update casting set Film_Id=22 where Film_Id=1111;
+update casting set Film_Id=23 where Film_Id=1122;
+update casting set Film_Id=24 where Film_Id=1133;
+
+//want to change the values of column Art_Id from table casting//
+
+update casting set Art_Id=01 where Art_Id=31;
+update casting set Art_Id=02 where Art_Id=32;
+update casting set Art_Id=03 where Art_Id=33;
+update casting set Art_Id=04 where Art_Id=34;
+
+//want to change the values of column Film_Id from table review//
+
+update review set Film_Id=21 where Film_Id=41;
+update review set Film_Id=22 where Film_Id=42;
+update review set Film_Id=23 where Film_Id=43;
+update review set Film_Id=24 where Film_Id=44;
+
+
+//want to change the values of column prod id from table films//
+update films set Prod_Id=12 where Prod_Id=22;
+update films set Prod_Id=13 where Prod_Id=21;
+update films set Prod_Id=14 where Prod_Id=93;
+
+//want to change the values of column Stars from review table//
+update review set Stars=3 where Stars=6;
+update review set Stars=3 where Stars=7;
+update review set Stars=4 where Stars=8;
+
+//FIND THE NAME OF ALL FILMS WOSE PRODUCER IS ANJALY//
+
+select Producer_Id from producer where Producer_Name='Anjaly';
+select Film_Title from films where Prod_Id in (select Producer_Id from producer where Producer_Name='Anjaly');
+
+//DISPLAY ALL ARTISTS WHO ACTED IN A FILM BETWEEN 2016 AND 2023
+
+select A.Art_Name,F.Film_Title,F.Film_Year from artist A,casting C,Films F
+where A.Art_Id=C.Art_Id
+and C.Film_Id=F.Film_Id
+and F.Film_Year between 2016 and 2023;
+
+//Display the names of films with the stars recieved and sort the result on the basis of stars//
+
+select F.Film_Title,R.Stars
+from films F,review R
+where F.Film_Id=R.Film_Id
+order by R.Stars desc;
+
+//update the stars of all films whose producer is Fasil to 5;
+
+update review set Stars=5
+where Film_Id in (select Film_Id from films 
+where Producer_Id in(select Producer_Id from producer 
+where Producer_Name='Fasil'));
+select * from review
+
+// use join for any 2 tables(producer and films)//
+
+select * from artist
+left join casting
+on artist.Art_Id=
+casting.Art_Id;
+
+select * from artist
+inner join casting
+on artist.Art_Id=
+casting.Art_Id;
+
+select * from casting
+right join  artist
+on artist.Art_Id=
+casting.Art_Id;
+
+select* from artist
+left join casting
+on artist.Art_Id=
+casting.Art_Id
+union all
+select * from casting
+right join  artist
+on artist.Art_Id=
+casting.Art_Id;
+
+//Display the movie release on the year 2022//
+
+select Film_Title from films where Film_Year=2022;
